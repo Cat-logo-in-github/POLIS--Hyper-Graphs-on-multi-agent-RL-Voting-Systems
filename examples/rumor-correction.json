@@ -1,0 +1,244 @@
+{
+  "kind": "polis-study",
+  "version": 2,
+  "config": {
+    "version": 2,
+    "seed": 42,
+    "population": 120,
+    "rule": "plurality",
+    "tieBreak": "index",
+    "topology": "hypergraph",
+    "groupSize": 6,
+    "overlap": 2,
+    "homophily": 0.6,
+    "geographicLocality": 0.5,
+    "bridges": 0.15,
+    "isolation": 0,
+    "influence": 0.25,
+    "confidence": 1,
+    "noise": 0.03,
+    "memory": 0.6,
+    "diffusion": "threshold",
+    "threshold": 0.34,
+    "spread": 0.35,
+    "decay": 0.08,
+    "learning": true,
+    "alpha": 0.15,
+    "gamma": 0.8,
+    "epsilon": 0.25,
+    "epsilonDecay": 0.997,
+    "epsilonFloor": 0.03,
+    "episodeLength": 50,
+    "allowAbstain": true,
+    "votingCost": 0.04,
+    "turnout": 0.9,
+    "utilityReward": 1,
+    "ballotReward": 0.2,
+    "conformityReward": 0.1,
+    "policies": [
+      {
+        "id": "A",
+        "name": "Civic investment",
+        "positions": [
+          0.75,
+          0.1,
+          0.4
+        ]
+      },
+      {
+        "id": "B",
+        "name": "Green transition",
+        "positions": [
+          0.15,
+          0.9,
+          0.15
+        ]
+      },
+      {
+        "id": "C",
+        "name": "Local autonomy",
+        "positions": [
+          -0.65,
+          -0.35,
+          -0.5
+        ]
+      }
+    ],
+    "regions": [
+      {
+        "id": "north",
+        "name": "North district",
+        "x": 0.25,
+        "y": 0.25,
+        "share": 1,
+        "access": 1,
+        "benefits": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "east",
+        "name": "East district",
+        "x": 0.75,
+        "y": 0.25,
+        "share": 1,
+        "access": 0.9,
+        "benefits": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "south",
+        "name": "South district",
+        "x": 0.25,
+        "y": 0.75,
+        "share": 1,
+        "access": 0.8,
+        "benefits": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "id": "west",
+        "name": "West district",
+        "x": 0.75,
+        "y": 0.75,
+        "share": 1,
+        "access": 1,
+        "benefits": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "communities": [
+      {
+        "id": "commons",
+        "name": "Commons forum",
+        "share": 1,
+        "ideal": [
+          0.65,
+          0.1,
+          0.5
+        ],
+        "salience": [
+          1,
+          1,
+          1
+        ],
+        "dispersion": 0.4,
+        "trust": 0.65,
+        "susceptibility": 0.65,
+        "participation": 0.9,
+        "resource": 0.6,
+        "media": 0.7,
+        "home": "any"
+      },
+      {
+        "id": "ecology",
+        "name": "Ecology circle",
+        "share": 1,
+        "ideal": [
+          0.1,
+          0.8,
+          0.2
+        ],
+        "salience": [
+          1,
+          2,
+          1
+        ],
+        "dispersion": 0.4,
+        "trust": 0.6,
+        "susceptibility": 0.5,
+        "participation": 0.9,
+        "resource": 0.6,
+        "media": 0.7,
+        "home": "any"
+      },
+      {
+        "id": "local",
+        "name": "Local assembly",
+        "share": 1,
+        "ideal": [
+          -0.6,
+          -0.3,
+          -0.4
+        ],
+        "salience": [
+          2,
+          1,
+          1
+        ],
+        "dispersion": 0.4,
+        "trust": 0.5,
+        "susceptibility": 0.55,
+        "participation": 0.8,
+        "resource": 0.5,
+        "media": 0.6,
+        "home": "any"
+      }
+    ],
+    "attributes": [
+      {
+        "key": "channel",
+        "values": [
+          "print",
+          "broadcast",
+          "online"
+        ]
+      }
+    ],
+    "events": [
+      {
+        "id": "rumor",
+        "name": "False C signal",
+        "kind": "misinformation",
+        "policy": 2,
+        "start": 20,
+        "duration": 30,
+        "period": 1,
+        "intensity": 0.6,
+        "coverage": 0.7,
+        "enabled": true,
+        "target": {
+          "community": "any",
+          "region": "any",
+          "attribute": "none",
+          "value": "",
+          "resourceMin": 0,
+          "resourceMax": 1,
+          "ids": []
+        }
+      },
+      {
+        "id": "repair",
+        "name": "Delayed correction",
+        "kind": "correction",
+        "policy": 2,
+        "start": 55,
+        "duration": 35,
+        "period": 1,
+        "intensity": 0.9,
+        "coverage": 0.7,
+        "enabled": true,
+        "target": {
+          "community": "any",
+          "region": "any",
+          "attribute": "none",
+          "value": "",
+          "resourceMin": 0,
+          "resourceMax": 1,
+          "ids": []
+        }
+      }
+    ]
+  }
+}

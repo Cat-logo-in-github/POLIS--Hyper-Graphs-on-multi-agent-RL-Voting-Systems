@@ -1,0 +1,6 @@
+import{readFileSync,existsSync,readdirSync,statSync}from 'node:fs';import{fileURLToPath}from 'node:url';import{dirname,join,resolve}from 'node:path';import assert from 'node:assert/strict';
+const root=fileURLToPath(new URL('../',import.meta.url)),walk=p=>readdirSync(p).flatMap(n=>statSync(join(p,n)).isDirectory()?walk(join(p,n)):[join(p,n)]);
+const html=readFileSync(join(root,'index.html'),'utf8');for(const m of html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g))assert(existsSync(resolve(root,m[1])),m[1]);
+for(const f of walk(join(root,'src')).filter(f=>f.endsWith('.js'))){const code=readFileSync(f,'utf8');for(const m of code.matchAll(/(?:from\s*|import\s*|new URL\()['"](\.\.?\/[^'"]+)['"]/g))assert(existsSync(resolve(dirname(f),m[1])),f+' → '+m[1]);}
+for(const f of ['.github/workflows/pages.yml','README.md','LICENSE','docs/model.md','docs/literature.md','docs/experiments.md','docs/limitations.md','docs/verification.md','examples/baseline.json'])assert(existsSync(join(root,f)),f);
+assert(!existsSync(join(root,'node_modules')));assert(!/<script[^>]+src="https?:/.test(html));console.log('PASS: local module/style paths, worker reference, docs, examples, deployment workflow and no remote runtime scripts.');

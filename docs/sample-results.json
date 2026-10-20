@@ -1,0 +1,1266 @@
+{
+  "version": 2,
+  "description": "Exploratory model comparisons, no significance claims",
+  "studies": [
+    {
+      "name": "topology",
+      "config": {
+        "version": 2,
+        "seed": 42,
+        "population": 120,
+        "rule": "plurality",
+        "tieBreak": "index",
+        "topology": "pairwise",
+        "groupSize": 6,
+        "overlap": 2,
+        "homophily": 0.6,
+        "geographicLocality": 0.5,
+        "bridges": 0.15,
+        "isolation": 0,
+        "influence": 0.25,
+        "confidence": 1,
+        "noise": 0.03,
+        "memory": 0.6,
+        "diffusion": "threshold",
+        "threshold": 0.34,
+        "spread": 0.35,
+        "decay": 0.08,
+        "learning": true,
+        "alpha": 0.15,
+        "gamma": 0.8,
+        "epsilon": 0.25,
+        "epsilonDecay": 0.997,
+        "epsilonFloor": 0.03,
+        "episodeLength": 50,
+        "allowAbstain": true,
+        "votingCost": 0.04,
+        "turnout": 0.9,
+        "utilityReward": 1,
+        "ballotReward": 0.2,
+        "conformityReward": 0.1,
+        "policies": [
+          {
+            "id": "A",
+            "name": "Civic investment",
+            "positions": [
+              0.75,
+              0.1,
+              0.4
+            ]
+          },
+          {
+            "id": "B",
+            "name": "Green transition",
+            "positions": [
+              0.15,
+              0.9,
+              0.15
+            ]
+          },
+          {
+            "id": "C",
+            "name": "Local autonomy",
+            "positions": [
+              -0.65,
+              -0.35,
+              -0.5
+            ]
+          }
+        ],
+        "regions": [
+          {
+            "id": "north",
+            "name": "North district",
+            "x": 0.25,
+            "y": 0.25,
+            "share": 1,
+            "access": 1,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "east",
+            "name": "East district",
+            "x": 0.75,
+            "y": 0.25,
+            "share": 1,
+            "access": 0.9,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "south",
+            "name": "South district",
+            "x": 0.25,
+            "y": 0.75,
+            "share": 1,
+            "access": 0.8,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "west",
+            "name": "West district",
+            "x": 0.75,
+            "y": 0.75,
+            "share": 1,
+            "access": 1,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "communities": [
+          {
+            "id": "commons",
+            "name": "Commons forum",
+            "share": 1,
+            "ideal": [
+              0.65,
+              0.1,
+              0.5
+            ],
+            "salience": [
+              1,
+              1,
+              1
+            ],
+            "dispersion": 0.4,
+            "trust": 0.65,
+            "susceptibility": 0.65,
+            "participation": 0.9,
+            "resource": 0.6,
+            "media": 0.7,
+            "home": "any"
+          },
+          {
+            "id": "ecology",
+            "name": "Ecology circle",
+            "share": 1,
+            "ideal": [
+              0.1,
+              0.8,
+              0.2
+            ],
+            "salience": [
+              1,
+              2,
+              1
+            ],
+            "dispersion": 0.4,
+            "trust": 0.6,
+            "susceptibility": 0.5,
+            "participation": 0.9,
+            "resource": 0.6,
+            "media": 0.7,
+            "home": "any"
+          },
+          {
+            "id": "local",
+            "name": "Local assembly",
+            "share": 1,
+            "ideal": [
+              -0.6,
+              -0.3,
+              -0.4
+            ],
+            "salience": [
+              2,
+              1,
+              1
+            ],
+            "dispersion": 0.4,
+            "trust": 0.5,
+            "susceptibility": 0.55,
+            "participation": 0.8,
+            "resource": 0.5,
+            "media": 0.6,
+            "home": "any"
+          }
+        ],
+        "attributes": [
+          {
+            "key": "channel",
+            "values": [
+              "print",
+              "broadcast",
+              "online"
+            ]
+          }
+        ],
+        "events": []
+      },
+      "patch": {
+        "topology": "hypergraph"
+      },
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ],
+      "rounds": 150,
+      "endpoint": "Mean over all 150 rounds",
+      "results": [
+        {
+          "seed": 42,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8687519035054643,
+          "baseline_error": 0.13306003375948453,
+          "baseline_turnout": 0.6183888888888887,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9732860451768096,
+          "treatment_welfare": 0.8706275092026493,
+          "treatment_error": 0.10754608269963226,
+          "treatment_turnout": 0.6169444444444442,
+          "treatment_infected": 0,
+          "treatment_reward": 0.9815828337022652,
+          "delta_welfare": 0.0018756056971850343,
+          "delta_error": -0.02551395105985227,
+          "delta_turnout": -0.0014444444444444704,
+          "delta_infected": 0,
+          "delta_reward": 0.008296788525455567
+        },
+        {
+          "seed": 43,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8716236480215965,
+          "baseline_error": 0.13210455669266505,
+          "baseline_turnout": 0.5427222222222224,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9608193372920245,
+          "treatment_welfare": 0.870625046133213,
+          "treatment_error": 0.10937600140219886,
+          "treatment_turnout": 0.5475555555555555,
+          "treatment_infected": 0,
+          "treatment_reward": 0.9654631578284721,
+          "delta_welfare": -0.0009986018883835213,
+          "delta_error": -0.02272855529046619,
+          "delta_turnout": 0.004833333333333023,
+          "delta_infected": 0,
+          "delta_reward": 0.004643820536447629
+        },
+        {
+          "seed": 44,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8458612236918429,
+          "baseline_error": 0.1309530286300184,
+          "baseline_turnout": 0.547888888888889,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9353960887745497,
+          "treatment_welfare": 0.8447183866430499,
+          "treatment_error": 0.10874471327662297,
+          "treatment_turnout": 0.5381111111111112,
+          "treatment_infected": 0,
+          "treatment_reward": 0.9375623236195345,
+          "delta_welfare": -0.0011428370487930328,
+          "delta_error": -0.02220831535339543,
+          "delta_turnout": -0.009777777777777774,
+          "delta_infected": 0,
+          "delta_reward": 0.0021662348449847935
+        },
+        {
+          "seed": 45,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.86429534886358,
+          "baseline_error": 0.13334823840053725,
+          "baseline_turnout": 0.5605555555555555,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9592780590389051,
+          "treatment_welfare": 0.8734384867170544,
+          "treatment_error": 0.10633822925831524,
+          "treatment_turnout": 0.5424444444444444,
+          "treatment_infected": 0,
+          "treatment_reward": 0.9704532483379241,
+          "delta_welfare": 0.009143137853474426,
+          "delta_error": -0.027010009142222013,
+          "delta_turnout": -0.018111111111111078,
+          "delta_infected": 0,
+          "delta_reward": 0.011175189299019062
+        },
+        {
+          "seed": 46,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8601423761820032,
+          "baseline_error": 0.1304154042281811,
+          "baseline_turnout": 0.5796111111111114,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9541813694094972,
+          "treatment_welfare": 0.8840971378218228,
+          "treatment_error": 0.10414534917833906,
+          "treatment_turnout": 0.584388888888889,
+          "treatment_infected": 0,
+          "treatment_reward": 0.9856372312455015,
+          "delta_welfare": 0.023954761639819577,
+          "delta_error": -0.026270055049842034,
+          "delta_turnout": 0.004777777777777548,
+          "delta_infected": 0,
+          "delta_reward": 0.03145586183600435
+        },
+        {
+          "seed": 47,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8798555817270021,
+          "baseline_error": 0.1322996431659251,
+          "baseline_turnout": 0.5942777777777779,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9790444616371733,
+          "treatment_welfare": 0.8868735400300938,
+          "treatment_error": 0.1035119832344785,
+          "treatment_turnout": 0.5841111111111112,
+          "treatment_infected": 0,
+          "treatment_reward": 0.9914198800765914,
+          "delta_welfare": 0.007017958303091709,
+          "delta_error": -0.028787659931446608,
+          "delta_turnout": -0.010166666666666657,
+          "delta_infected": 0,
+          "delta_reward": 0.01237541843941814
+        },
+        {
+          "seed": 48,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8684335684522413,
+          "baseline_error": 0.13478902105137885,
+          "baseline_turnout": 0.5553333333333335,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9628237573130163,
+          "treatment_welfare": 0.8531512646834937,
+          "treatment_error": 0.11041681425826828,
+          "treatment_turnout": 0.5547222222222222,
+          "treatment_infected": 0,
+          "treatment_reward": 0.9519381182364132,
+          "delta_welfare": -0.015282303768747618,
+          "delta_error": -0.02437220679311057,
+          "delta_turnout": -0.0006111111111112288,
+          "delta_infected": 0,
+          "delta_reward": -0.010885639076603115
+        },
+        {
+          "seed": 49,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8529110769127076,
+          "baseline_error": 0.13066885702002307,
+          "baseline_turnout": 0.5777777777777778,
+          "baseline_infected": 0,
+          "baseline_reward": 0.948258064046308,
+          "treatment_welfare": 0.8463121731019456,
+          "treatment_error": 0.10916545324367394,
+          "treatment_turnout": 0.5892777777777778,
+          "treatment_infected": 0,
+          "treatment_reward": 0.9498084699516247,
+          "delta_welfare": -0.006598903810762002,
+          "delta_error": -0.021503403776349128,
+          "delta_turnout": 0.011499999999999955,
+          "delta_infected": 0,
+          "delta_reward": 0.001550405905316743
+        }
+      ],
+      "welfare": {
+        "n": 8,
+        "mean": 0.0022461021221105715,
+        "sd": 0.011644956203042234,
+        "min": -0.015282303768747618,
+        "max": 0.023954761639819577
+      },
+      "beliefError": {
+        "n": 8,
+        "mean": -0.02479926954958553,
+        "sd": 0.0025499193829354354,
+        "min": -0.028787659931446608,
+        "max": -0.021503403776349128
+      }
+    },
+    {
+      "name": "misinformation",
+      "config": {
+        "version": 2,
+        "seed": 42,
+        "population": 120,
+        "rule": "plurality",
+        "tieBreak": "index",
+        "topology": "hypergraph",
+        "groupSize": 6,
+        "overlap": 2,
+        "homophily": 0.6,
+        "geographicLocality": 0.5,
+        "bridges": 0.15,
+        "isolation": 0,
+        "influence": 0.25,
+        "confidence": 1,
+        "noise": 0.03,
+        "memory": 0.6,
+        "diffusion": "threshold",
+        "threshold": 0.34,
+        "spread": 0.35,
+        "decay": 0.08,
+        "learning": true,
+        "alpha": 0.15,
+        "gamma": 0.8,
+        "epsilon": 0.25,
+        "epsilonDecay": 0.997,
+        "epsilonFloor": 0.03,
+        "episodeLength": 50,
+        "allowAbstain": true,
+        "votingCost": 0.04,
+        "turnout": 0.9,
+        "utilityReward": 1,
+        "ballotReward": 0.2,
+        "conformityReward": 0.1,
+        "policies": [
+          {
+            "id": "A",
+            "name": "Civic investment",
+            "positions": [
+              0.75,
+              0.1,
+              0.4
+            ]
+          },
+          {
+            "id": "B",
+            "name": "Green transition",
+            "positions": [
+              0.15,
+              0.9,
+              0.15
+            ]
+          },
+          {
+            "id": "C",
+            "name": "Local autonomy",
+            "positions": [
+              -0.65,
+              -0.35,
+              -0.5
+            ]
+          }
+        ],
+        "regions": [
+          {
+            "id": "north",
+            "name": "North district",
+            "x": 0.25,
+            "y": 0.25,
+            "share": 1,
+            "access": 1,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "east",
+            "name": "East district",
+            "x": 0.75,
+            "y": 0.25,
+            "share": 1,
+            "access": 0.9,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "south",
+            "name": "South district",
+            "x": 0.25,
+            "y": 0.75,
+            "share": 1,
+            "access": 0.8,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "west",
+            "name": "West district",
+            "x": 0.75,
+            "y": 0.75,
+            "share": 1,
+            "access": 1,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "communities": [
+          {
+            "id": "commons",
+            "name": "Commons forum",
+            "share": 1,
+            "ideal": [
+              0.65,
+              0.1,
+              0.5
+            ],
+            "salience": [
+              1,
+              1,
+              1
+            ],
+            "dispersion": 0.4,
+            "trust": 0.65,
+            "susceptibility": 0.65,
+            "participation": 0.9,
+            "resource": 0.6,
+            "media": 0.7,
+            "home": "any"
+          },
+          {
+            "id": "ecology",
+            "name": "Ecology circle",
+            "share": 1,
+            "ideal": [
+              0.1,
+              0.8,
+              0.2
+            ],
+            "salience": [
+              1,
+              2,
+              1
+            ],
+            "dispersion": 0.4,
+            "trust": 0.6,
+            "susceptibility": 0.5,
+            "participation": 0.9,
+            "resource": 0.6,
+            "media": 0.7,
+            "home": "any"
+          },
+          {
+            "id": "local",
+            "name": "Local assembly",
+            "share": 1,
+            "ideal": [
+              -0.6,
+              -0.3,
+              -0.4
+            ],
+            "salience": [
+              2,
+              1,
+              1
+            ],
+            "dispersion": 0.4,
+            "trust": 0.5,
+            "susceptibility": 0.55,
+            "participation": 0.8,
+            "resource": 0.5,
+            "media": 0.6,
+            "home": "any"
+          }
+        ],
+        "attributes": [
+          {
+            "key": "channel",
+            "values": [
+              "print",
+              "broadcast",
+              "online"
+            ]
+          }
+        ],
+        "events": []
+      },
+      "patch": {
+        "events": [
+          {
+            "id": "false1",
+            "name": "False C signal",
+            "kind": "misinformation",
+            "policy": 2,
+            "start": 20,
+            "duration": 30,
+            "period": 1,
+            "intensity": 0.7,
+            "coverage": 0.7,
+            "enabled": true,
+            "target": {
+              "community": "any",
+              "region": "any",
+              "attribute": "none",
+              "value": "",
+              "resourceMin": 0,
+              "resourceMax": 1,
+              "ids": []
+            }
+          }
+        ]
+      },
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ],
+      "rounds": 150,
+      "endpoint": "Mean over all 150 rounds",
+      "results": [
+        {
+          "seed": 42,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8706275092026493,
+          "baseline_error": 0.10754608269963226,
+          "baseline_turnout": 0.6169444444444442,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9815828337022652,
+          "treatment_welfare": 0.8740813509040504,
+          "treatment_error": 0.11183113539981904,
+          "treatment_turnout": 0.5653333333333331,
+          "treatment_infected": 0.7850555555555572,
+          "treatment_reward": 0.9755692325990729,
+          "delta_welfare": 0.0034538417014010614,
+          "delta_error": 0.004285052700186781,
+          "delta_turnout": -0.05161111111111105,
+          "delta_infected": 0.7850555555555572,
+          "delta_reward": -0.006013601103192268
+        },
+        {
+          "seed": 43,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.870625046133213,
+          "baseline_error": 0.10937600140219886,
+          "baseline_turnout": 0.5475555555555555,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9654631578284721,
+          "treatment_welfare": 0.8661359218062485,
+          "treatment_error": 0.11417723052533878,
+          "treatment_turnout": 0.5765555555555555,
+          "treatment_infected": 0.7931111111111123,
+          "treatment_reward": 0.965842800909827,
+          "delta_welfare": -0.0044891243269644665,
+          "delta_error": 0.004801229123139919,
+          "delta_turnout": 0.029000000000000026,
+          "delta_infected": 0.7931111111111123,
+          "delta_reward": 0.00037964308135485236
+        },
+        {
+          "seed": 44,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8447183866430499,
+          "baseline_error": 0.10874471327662297,
+          "baseline_turnout": 0.5381111111111112,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9375623236195345,
+          "treatment_welfare": 0.852822145703597,
+          "treatment_error": 0.11051129845027993,
+          "treatment_turnout": 0.5436666666666665,
+          "treatment_infected": 0.7925000000000012,
+          "treatment_reward": 0.9483275712721619,
+          "delta_welfare": 0.008103759060547167,
+          "delta_error": 0.0017665851736569649,
+          "delta_turnout": 0.005555555555555314,
+          "delta_infected": 0.7925000000000012,
+          "delta_reward": 0.01076524765262743
+        },
+        {
+          "seed": 45,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8734384867170544,
+          "baseline_error": 0.10633822925831524,
+          "baseline_turnout": 0.5424444444444444,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9704532483379241,
+          "treatment_welfare": 0.8751649588584777,
+          "treatment_error": 0.10860885677635099,
+          "treatment_turnout": 0.5306111111111109,
+          "treatment_infected": 0.7785000000000021,
+          "treatment_reward": 0.9701451909733622,
+          "delta_welfare": 0.0017264721414232964,
+          "delta_error": 0.0022706275180357505,
+          "delta_turnout": -0.011833333333333473,
+          "delta_infected": 0.7785000000000021,
+          "delta_reward": -0.0003080573645619644
+        },
+        {
+          "seed": 46,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8840971378218228,
+          "baseline_error": 0.10414534917833906,
+          "baseline_turnout": 0.584388888888889,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9856372312455015,
+          "treatment_welfare": 0.8690316325192,
+          "treatment_error": 0.11060019301618813,
+          "treatment_turnout": 0.5626111111111112,
+          "treatment_infected": 0.778388888888891,
+          "treatment_reward": 0.9680064384117647,
+          "delta_welfare": -0.01506550530262274,
+          "delta_error": 0.00645484383784907,
+          "delta_turnout": -0.021777777777777785,
+          "delta_infected": 0.778388888888891,
+          "delta_reward": -0.017630792833736808
+        },
+        {
+          "seed": 47,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8868735400300938,
+          "baseline_error": 0.1035119832344785,
+          "baseline_turnout": 0.5841111111111112,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9914198800765914,
+          "treatment_welfare": 0.8707236367023153,
+          "treatment_error": 0.10986668946722318,
+          "treatment_turnout": 0.5880000000000005,
+          "treatment_infected": 0.7748333333333325,
+          "treatment_reward": 0.9756623228837752,
+          "delta_welfare": -0.016149903327778437,
+          "delta_error": 0.006354706232744686,
+          "delta_turnout": 0.0038888888888892748,
+          "delta_infected": 0.7748333333333325,
+          "delta_reward": -0.01575755719281624
+        },
+        {
+          "seed": 48,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8531512646834937,
+          "baseline_error": 0.11041681425826828,
+          "baseline_turnout": 0.5547222222222222,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9519381182364132,
+          "treatment_welfare": 0.875630890407585,
+          "treatment_error": 0.11151879105945682,
+          "treatment_turnout": 0.5330000000000003,
+          "treatment_infected": 0.7889444444444428,
+          "treatment_reward": 0.9716823897433716,
+          "delta_welfare": 0.022479625724091346,
+          "delta_error": 0.0011019768011885367,
+          "delta_turnout": -0.021722222222221976,
+          "delta_infected": 0.7889444444444428,
+          "delta_reward": 0.019744271506958455
+        },
+        {
+          "seed": 49,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8463121731019456,
+          "baseline_error": 0.10916545324367394,
+          "baseline_turnout": 0.5892777777777778,
+          "baseline_infected": 0,
+          "baseline_reward": 0.9498084699516247,
+          "treatment_welfare": 0.848190202731632,
+          "treatment_error": 0.11349996396425849,
+          "treatment_turnout": 0.5887222222222223,
+          "treatment_infected": 0.7963333333333312,
+          "treatment_reward": 0.9502249499799037,
+          "delta_welfare": 0.0018780296296864174,
+          "delta_error": 0.00433451072058455,
+          "delta_turnout": -0.0005555555555555314,
+          "delta_infected": 0.7963333333333312,
+          "delta_reward": 0.0004164800282789871
+        }
+      ],
+      "welfare": {
+        "n": 8,
+        "mean": 0.00024214941247295563,
+        "sd": 0.012518062272967562,
+        "min": -0.016149903327778437,
+        "max": 0.022479625724091346
+      },
+      "beliefError": {
+        "n": 8,
+        "mean": 0.003921191513423282,
+        "sd": 0.0020260356607667866,
+        "min": 0.0011019768011885367,
+        "max": 0.00645484383784907
+      }
+    },
+    {
+      "name": "correction",
+      "config": {
+        "version": 2,
+        "seed": 42,
+        "population": 120,
+        "rule": "plurality",
+        "tieBreak": "index",
+        "topology": "hypergraph",
+        "groupSize": 6,
+        "overlap": 2,
+        "homophily": 0.6,
+        "geographicLocality": 0.5,
+        "bridges": 0.15,
+        "isolation": 0,
+        "influence": 0.25,
+        "confidence": 1,
+        "noise": 0.03,
+        "memory": 0.6,
+        "diffusion": "threshold",
+        "threshold": 0.34,
+        "spread": 0.35,
+        "decay": 0.08,
+        "learning": true,
+        "alpha": 0.15,
+        "gamma": 0.8,
+        "epsilon": 0.25,
+        "epsilonDecay": 0.997,
+        "epsilonFloor": 0.03,
+        "episodeLength": 50,
+        "allowAbstain": true,
+        "votingCost": 0.04,
+        "turnout": 0.9,
+        "utilityReward": 1,
+        "ballotReward": 0.2,
+        "conformityReward": 0.1,
+        "policies": [
+          {
+            "id": "A",
+            "name": "Civic investment",
+            "positions": [
+              0.75,
+              0.1,
+              0.4
+            ]
+          },
+          {
+            "id": "B",
+            "name": "Green transition",
+            "positions": [
+              0.15,
+              0.9,
+              0.15
+            ]
+          },
+          {
+            "id": "C",
+            "name": "Local autonomy",
+            "positions": [
+              -0.65,
+              -0.35,
+              -0.5
+            ]
+          }
+        ],
+        "regions": [
+          {
+            "id": "north",
+            "name": "North district",
+            "x": 0.25,
+            "y": 0.25,
+            "share": 1,
+            "access": 1,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "east",
+            "name": "East district",
+            "x": 0.75,
+            "y": 0.25,
+            "share": 1,
+            "access": 0.9,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "south",
+            "name": "South district",
+            "x": 0.25,
+            "y": 0.75,
+            "share": 1,
+            "access": 0.8,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "west",
+            "name": "West district",
+            "x": 0.75,
+            "y": 0.75,
+            "share": 1,
+            "access": 1,
+            "benefits": [
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "communities": [
+          {
+            "id": "commons",
+            "name": "Commons forum",
+            "share": 1,
+            "ideal": [
+              0.65,
+              0.1,
+              0.5
+            ],
+            "salience": [
+              1,
+              1,
+              1
+            ],
+            "dispersion": 0.4,
+            "trust": 0.65,
+            "susceptibility": 0.65,
+            "participation": 0.9,
+            "resource": 0.6,
+            "media": 0.7,
+            "home": "any"
+          },
+          {
+            "id": "ecology",
+            "name": "Ecology circle",
+            "share": 1,
+            "ideal": [
+              0.1,
+              0.8,
+              0.2
+            ],
+            "salience": [
+              1,
+              2,
+              1
+            ],
+            "dispersion": 0.4,
+            "trust": 0.6,
+            "susceptibility": 0.5,
+            "participation": 0.9,
+            "resource": 0.6,
+            "media": 0.7,
+            "home": "any"
+          },
+          {
+            "id": "local",
+            "name": "Local assembly",
+            "share": 1,
+            "ideal": [
+              -0.6,
+              -0.3,
+              -0.4
+            ],
+            "salience": [
+              2,
+              1,
+              1
+            ],
+            "dispersion": 0.4,
+            "trust": 0.5,
+            "susceptibility": 0.55,
+            "participation": 0.8,
+            "resource": 0.5,
+            "media": 0.6,
+            "home": "any"
+          }
+        ],
+        "attributes": [
+          {
+            "key": "channel",
+            "values": [
+              "print",
+              "broadcast",
+              "online"
+            ]
+          }
+        ],
+        "events": [
+          {
+            "id": "false1",
+            "name": "False C signal",
+            "kind": "misinformation",
+            "policy": 2,
+            "start": 20,
+            "duration": 30,
+            "period": 1,
+            "intensity": 0.7,
+            "coverage": 0.7,
+            "enabled": true,
+            "target": {
+              "community": "any",
+              "region": "any",
+              "attribute": "none",
+              "value": "",
+              "resourceMin": 0,
+              "resourceMax": 1,
+              "ids": []
+            }
+          }
+        ]
+      },
+      "patch": {
+        "events": [
+          {
+            "id": "false1",
+            "name": "False C signal",
+            "kind": "misinformation",
+            "policy": 2,
+            "start": 20,
+            "duration": 30,
+            "period": 1,
+            "intensity": 0.7,
+            "coverage": 0.7,
+            "enabled": true,
+            "target": {
+              "community": "any",
+              "region": "any",
+              "attribute": "none",
+              "value": "",
+              "resourceMin": 0,
+              "resourceMax": 1,
+              "ids": []
+            }
+          },
+          {
+            "id": "correction1",
+            "name": "Delayed correction",
+            "kind": "correction",
+            "policy": 2,
+            "start": 50,
+            "duration": 30,
+            "period": 1,
+            "intensity": 0.8,
+            "coverage": 0.7,
+            "enabled": true,
+            "target": {
+              "community": "any",
+              "region": "any",
+              "attribute": "none",
+              "value": "",
+              "resourceMin": 0,
+              "resourceMax": 1,
+              "ids": []
+            }
+          }
+        ]
+      },
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ],
+      "rounds": 150,
+      "endpoint": "Mean over all 150 rounds",
+      "results": [
+        {
+          "seed": 42,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8740813509040504,
+          "baseline_error": 0.11183113539981904,
+          "baseline_turnout": 0.5653333333333331,
+          "baseline_infected": 0.7850555555555572,
+          "baseline_reward": 0.9755692325990729,
+          "treatment_welfare": 0.8693968665587636,
+          "treatment_error": 0.10898204416143571,
+          "treatment_turnout": 0.5987222222222218,
+          "treatment_infected": 0.2538333333333333,
+          "treatment_reward": 0.976768729383155,
+          "delta_welfare": -0.004684484345286788,
+          "delta_error": -0.002849091238383325,
+          "delta_turnout": 0.03338888888888869,
+          "delta_infected": -0.5312222222222238,
+          "delta_reward": 0.0011994967840820436
+        },
+        {
+          "seed": 43,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8661359218062485,
+          "baseline_error": 0.11417723052533878,
+          "baseline_turnout": 0.5765555555555555,
+          "baseline_infected": 0.7931111111111123,
+          "baseline_reward": 0.965842800909827,
+          "treatment_welfare": 0.8698830966112489,
+          "treatment_error": 0.11069734446819192,
+          "treatment_turnout": 0.5532222222222223,
+          "treatment_infected": 0.2546111111111111,
+          "treatment_reward": 0.9659768707232382,
+          "delta_welfare": 0.0037471748050003084,
+          "delta_error": -0.003479886057146858,
+          "delta_turnout": -0.023333333333333206,
+          "delta_infected": -0.5385000000000012,
+          "delta_reward": 0.0001340698134112417
+        },
+        {
+          "seed": 44,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.852822145703597,
+          "baseline_error": 0.11051129845027993,
+          "baseline_turnout": 0.5436666666666665,
+          "baseline_infected": 0.7925000000000012,
+          "baseline_reward": 0.9483275712721619,
+          "treatment_welfare": 0.8456586312118336,
+          "treatment_error": 0.1093397602407762,
+          "treatment_turnout": 0.5387777777777778,
+          "treatment_infected": 0.25566666666666665,
+          "treatment_reward": 0.938925064456067,
+          "delta_welfare": -0.007163514491763445,
+          "delta_error": -0.0011715382095037336,
+          "delta_turnout": -0.0048888888888887205,
+          "delta_infected": -0.5368333333333346,
+          "delta_reward": -0.009402506816094891
+        },
+        {
+          "seed": 45,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8751649588584777,
+          "baseline_error": 0.10860885677635099,
+          "baseline_turnout": 0.5306111111111109,
+          "baseline_infected": 0.7785000000000021,
+          "baseline_reward": 0.9701451909733622,
+          "treatment_welfare": 0.8738689876852125,
+          "treatment_error": 0.1074670313668435,
+          "treatment_turnout": 0.5447222222222221,
+          "treatment_infected": 0.2520555555555555,
+          "treatment_reward": 0.9715087874282119,
+          "delta_welfare": -0.0012959711732651868,
+          "delta_error": -0.0011418254095074826,
+          "delta_turnout": 0.014111111111111185,
+          "delta_infected": -0.5264444444444466,
+          "delta_reward": 0.001363596454849736
+        },
+        {
+          "seed": 46,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8690316325192,
+          "baseline_error": 0.11060019301618813,
+          "baseline_turnout": 0.5626111111111112,
+          "baseline_infected": 0.778388888888891,
+          "baseline_reward": 0.9680064384117647,
+          "treatment_welfare": 0.8783963388289665,
+          "treatment_error": 0.10580830093645052,
+          "treatment_turnout": 0.5810555555555557,
+          "treatment_infected": 0.2578333333333333,
+          "treatment_reward": 0.9797153762400876,
+          "delta_welfare": 0.00936470630976649,
+          "delta_error": -0.004791892079737611,
+          "delta_turnout": 0.018444444444444485,
+          "delta_infected": -0.5205555555555577,
+          "delta_reward": 0.01170893782832294
+        },
+        {
+          "seed": 47,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.8707236367023153,
+          "baseline_error": 0.10986668946722318,
+          "baseline_turnout": 0.5880000000000005,
+          "baseline_infected": 0.7748333333333325,
+          "baseline_reward": 0.9756623228837752,
+          "treatment_welfare": 0.8847653832953923,
+          "treatment_error": 0.10552749336629551,
+          "treatment_turnout": 0.5826666666666669,
+          "treatment_infected": 0.25149999999999995,
+          "treatment_reward": 0.9891540209477032,
+          "delta_welfare": 0.014041746593076998,
+          "delta_error": -0.0043391961009276725,
+          "delta_turnout": -0.005333333333333634,
+          "delta_infected": -0.5233333333333325,
+          "delta_reward": 0.013491698063928026
+        },
+        {
+          "seed": 48,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.875630890407585,
+          "baseline_error": 0.11151879105945682,
+          "baseline_turnout": 0.5330000000000003,
+          "baseline_infected": 0.7889444444444428,
+          "baseline_reward": 0.9716823897433716,
+          "treatment_welfare": 0.8578218841188772,
+          "treatment_error": 0.11097143136427907,
+          "treatment_turnout": 0.5470555555555556,
+          "treatment_infected": 0.25411111111111107,
+          "treatment_reward": 0.955488152400746,
+          "delta_welfare": -0.01780900628870785,
+          "delta_error": -0.000547359695177746,
+          "delta_turnout": 0.014055555555555377,
+          "delta_infected": -0.5348333333333317,
+          "delta_reward": -0.016194237342625595
+        },
+        {
+          "seed": 49,
+          "fromRound": 0,
+          "rounds": 150,
+          "baseline_welfare": 0.848190202731632,
+          "baseline_error": 0.11349996396425849,
+          "baseline_turnout": 0.5887222222222223,
+          "baseline_infected": 0.7963333333333312,
+          "baseline_reward": 0.9502249499799037,
+          "treatment_welfare": 0.8474589963353704,
+          "treatment_error": 0.11003005241175809,
+          "treatment_turnout": 0.5907222222222224,
+          "treatment_infected": 0.25633333333333336,
+          "treatment_reward": 0.9508927040847988,
+          "delta_welfare": -0.0007312063962616744,
+          "delta_error": -0.0034699115525003987,
+          "delta_turnout": 0.002000000000000113,
+          "delta_infected": -0.5399999999999978,
+          "delta_reward": 0.0006677541048950575
+        }
+      ],
+      "welfare": {
+        "n": 8,
+        "mean": -0.0005663193734301436,
+        "sd": 0.009920967638087572,
+        "min": -0.01780900628870785,
+        "max": 0.014041746593076998
+      },
+      "beliefError": {
+        "n": 8,
+        "mean": -0.0027238375428606035,
+        "sd": 0.001589232004214863,
+        "min": -0.004791892079737611,
+        "max": -0.000547359695177746
+      }
+    }
+  ]
+}
