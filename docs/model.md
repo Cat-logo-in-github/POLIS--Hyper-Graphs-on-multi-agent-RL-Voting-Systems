@@ -1,83 +1,165 @@
-# POLIS V2 model — ODD-style description
+# POLIS V4.0 model — ODD-style description
+V4 adds independent neural and logit decisions, anchoring/confirmation controls, ensemble forecasting and aggregate-data calibration/validation. The core transition equations below retain their neutral V3 behavior. Read [neural-notes.md](neural-notes.md) for exact added equations/state, [forecast-methods.md](forecast-methods.md) for fitting/uncertainty, and [handbook-coverage.md](handbook-coverage.md) for the separate theory laboratory. Neural online/target weights, replay and update statistics are part of learned state; tabular Q remains a separate representation.
 
-Source correspondence: `schema.js` validates model inputs; `engine.js` defines agents and transitions; `experiments.js` implements paired studies; `worker.js` separates bounded research computation from the UI; `view.js` only renders engine state. Source code is the definitive implementation.
+Source correspondence: schema.js validates settings; topology.js constructs structure; engine.js defines agents, state transitions, learning and metrics; experiments.js defines paired studies and sweeps; robustness.js defines bounded ballot replacement analysis; view.js renders; advanced.js connects research controls. Source is the definitive implementation. References S1–S14 and actual access levels are in [literature.md](literature.md).
 
 ## 1. Purpose and patterns
 
-Explore hypotheses about social topology, information persistence, institutional rules and adaptive ballot choice in an explicitly synthetic society. Evaluation uses deterministic mathematical fixtures, mechanism checks and reproducible seed experiments, not fitted human behavioral patterns. No empirical validity or new discovery is claimed. The ODD structure follows Grimm et al. (2020), reference S6; it does not confer validation.
+The model explores whether changes in voting and learning follow from interaction order, connectivity, aggregation, information exposure or rewards. It supports transparent synthetic experiments and sensitivity checks. Evaluation uses mathematical fixtures, mechanism checks and deterministic replay; aggregate observations may be fitted through the separately documented Forecast module, but no empirical validity or novel scientific result is claimed by default. ODD organization follows S6 without implying validation.
 
 ## 2. Entities, state variables and scales
 
-Agents: ID, overlapping community IDs, abstract region, three ideal positions in [-1,1], three positive issue weights, trust/susceptibility/participation/resource/media in [0,1], categorical metadata, abstract coordinates, true policy utilities, beliefs, misinformation offsets, resistance, exposure counters, action, ballot, reward, 18×8 Q table, pending nonterminal update and recent reward history.
+Agents have stable integer IDs, overlapping community memberships, an abstract region, three ideal positions in [-1,1], positive issue weights, trust, susceptibility, participation, resource, media exposure, categorical metadata, unit-square coordinates, true utility, beliefs, signed distortion, resistance, direct exposure counters, ballot/action, reward, lifetime return, an 18×8 Q table, pending transition, actual update history and current transition trace.
 
-Policies: exactly A/B/C, display names and three issue positions. Communities: generators with relative weights, ideal positions, issue salience, dispersion, behavioral-trait means and optional home region. Initial memberships are exclusive; realized membership can be edited to overlap. Community membership influences topology and exposure filters; it has no intrinsic identity-based utility bonus.
+Exactly three policies have names and three issue positions. Communities are generators with relative sampling weight, ideals, issue salience, dispersion, trait means and optional home region. Initial memberships are exclusive, while realized memberships can overlap after editing. Membership affects structure and explicit event eligibility; it adds no identity-based utility bonus.
 
-Regions: center coordinates, sampling weight, ballot access and policy-specific true utility benefits. Categorical attributes are sampled independently and uniformly from declared values; they have no built-in effect beyond explicitly selected filters. Resource is a synthetic scalar filter and descriptive cohort variable, not an inferred socioeconomic category. Geography is an abstract unit square, not a real map or residence database.
+Regions define sampling weight, center coordinates, ballot access and policy-specific utility benefits. Metadata categories are initially independent uniform draws from authored values. Resource is a synthetic scalar with no inferred demographic meaning. Coordinates represent abstract space rather than a real map.
 
-Hyperedges: unique agent members, active flag, stable ID and manual/generated flag. Events: ID, mechanism, affected policy, start, duration, period, signed intensity, per-period coverage probability, enabled flag, and intersecting eligibility filters.
+Groups have a stable ID, name, unique members, active flag and generated/manual status. Projected pairs retain their source-group ID. Events define mechanism, policy, signed intensity, window, period, coverage and intersecting filters.
 
-One time step is one election round. No correspondence to days, media impressions or real election cycles is assumed. Histories retain 3,000 rounds, agent reward history 80 rounds, event ledger 500 entries.
+One step is an election round, without an assumed mapping to days or real election cycles. Supported limits include 12–600 agents, three policies, three axes, 16 community generators, 12 regions, eight categorical factors and 40 scheduled events.
 
 ## 3. Process overview and scheduling
 
-1. Determine enabled events whose windows include round r. Log exact starts and exclusive ends. Dynamic topology attempts one unique-member replacement per generated hyperedge every ten rounds.
-2. Form group signals and transmissible offsets from the previous round's beliefs and distortions.
-3. For each agent: recompute true utility; decay resistance; evaluate eligible periodic event exposures; combine access shocks and true utility shocks; apply decay, group-offset transmission, new false signals and correction; update beliefs from evidence, noise, memory and group influence. These updates read old group state synchronously.
-4. Form group signals from the new beliefs; discretize the actual current observation. Apply any previous pending nonterminal Q update using this observation as its actual next state. Select a legal action, generate ballot, then independently evaluate the ballot-access draw. Access failure forces an empty ballot if abstention is enabled.
-5. Aggregate the election, calculate true outcome utility and each reward. Terminal rounds update Q with no bootstrap; other rounds store a pending state/action/reward to be updated at the next actual observation. Record metrics.
+1. If the previous finite-horizon boundary ended, reset information state as described below. Determine events active at the next absolute round. Log their starts and exclusive ends.
+2. Every ten rounds in dynamic topology, attempt degree-preserving swaps of generated group memberships. Form social signals and transmissible offsets from the old beliefs/distortions.
+3. For each agent, recompute utility, decay resistance, evaluate periodic event coverage, accumulate false doses/corrections/access/outcome shocks, update distortion, then update belief. All agents read the same old group state.
+4. Reuse the received old-state social signal alongside each agent's newly updated own belief to encode the actual observation. Apply a pending nonterminal Q update using that observation. Choose a legal action, construct its ballot and apply access failure if abstention is available. There is one simulated social communication pass per round.
+5. Aggregate the election and compute true-utility reward components. A finite terminal transition updates immediately without bootstrap; otherwise the current state/action/reward waits for the next actual observation. Record metrics, event effects, traces and bounded state frames.
 
-All observations, information and rewards derive from actual state. Rendering and UI speed never consume simulation draws. The society continues between episodes; only the bootstrap term and episode-return accumulator reset at boundaries. Information, policies, utilities and topology do not regenerate then.
+Rendering does not consume simulation randomness. Pausing, playback speed and changing views do not substitute for transitions. Event windows and finite boundaries use the absolute round, including after a checkpoint.
 
 ## 4. Design concepts
 
-Emergence: election winners, trajectories and diffusion arise from state transitions. Adaptation: independent tabular learners estimate action values; fixed-policy baseline votes sincerely. Objectives: reward below. Sensing: agents see only their coarse belief/group state, not all private ideal positions. Interaction: nonlinear whole-group aggregation and gated offset diffusion. Heterogeneity: explicit community generator assumptions and sampled ideals/resource/metadata. Collectives: overlapping communities and hyperedges are distinct. Observation: agent and cohort inspectors, metric exports and paired studies. Stochasticity: deterministic hash-based counter draws, not a sequential stream.
+Emergence: winners, beliefs, diffusion and ballot changes arise from explicit transitions. Adaptation: independent tabular learners update their own tables; sincere and random policies are nonlearning controls. Objectives: authored reward weights below. Sensing: a coarse observation of private belief and group favorite, rather than every private ideal. Interaction: separately selected topology, aggregation and offset transmission. Heterogeneity: generator assumptions and sampled ideals/resources/metadata. Collectives: community labels and communication groups are distinct. Stochasticity: deterministic counter draws. Observation: state inspectors, Q traces, cohorts, recorded frames and paired experiments.
 
-## 5. Initialization
+## 5. Initialization and topology
 
-Select a community by relative weight; choose its specified home region or a region by weight. Sample each ideal uniformly within ±dispersion of its community mean and clip. Copy issue salience and behavioral traits. Sample resource within ±0.15 of the mean and clip; media exposure is the community value. Metadata categories are uniform independent draws. Agent coordinates jitter ±0.175 around its region center and clip to [.02,.98]. Initialize beliefs to true utility, offsets/resistance to zero and Q entries to zero. Seeded random tie selection avoids all-zero policies always choosing A.
+Sample a community using relative weights, then its home region or a weighted region. Sample each ideal uniformly within ±dispersion and clip. Copy salience and trait means; jitter resource by ±0.15 and coordinates by ±0.175, with bounds. Initialize utility from policy distance, beliefs equal utility, distortion/resistance zero and Q entries zero.
 
-Generated group size is 2 in pairwise mode or configured group size otherwise. Anchors occur at stride max(1,size−min(size−1,overlap)) among agents not excluded by the isolation draw. Candidate ordering combines a keyed random score, same-community preference and geometric distance. Random bridges can replace a locally chosen candidate with a random unused one. This is a synthetic affinity-based generator, not a calibrated network model. Isolation excludes a fraction in expectation, not exactly; additional isolated agents can emerge because candidate selection does not guarantee coverage. Diagnostics report realized membership counts, sizes, incidence-connectivity components and isolation.
+The generator excludes agents using a seeded isolation draw. Anchors appear at stride max(1, size−min(size−1, overlap)). Candidate ordering combines seeded randomness, homophily on the selected grouping criterion, and geographic distance. Grouping criteria are shared community, ideal-distance similarity, equality of most recent action, random affinity or manual-only. The action criterion is initially uninformative because all actions start at -1; regenerate after behavior exists to use it. Bridge draws can select another unused member. This is a heuristic affinity generator, not fitted social structure or HYGMA clustering.
 
-## 6. Input data
+Topology options:
 
-Only synthetic settings, locally generated checkpoints and user-authored numeric design assumptions. No external runtime dataset, voter roll, API, server, map or demographic lookup. V1 files are not schema-compatible with V2 and are rejected rather than silently reinterpreted.
+- **None:** no generated communication groups.
+- **Pairwise:** independently generated size-two groups using the same population and generator assumptions.
+- **Hypergraph:** the generated groups at configured size.
+- **Clique:** all unordered pairs within each exact source group. Parallel pairs from different source groups remain separate message incidences.
+- **Randomized:** finite member swaps preserving group sizes and node incidence counts, subject to unique membership. Swaps remain within the same active/inactive group stratum, preserving active incidence degrees too. No uniform configuration-model or mixing claim is made.
+- **Dynamic:** generated hyperedges periodically undergo the same finite membership swaps. Manual groups persist.
+
+Membership matching applies an ordered incidence budget: groups/members can be truncated or omitted when the cap is exhausted. Communication matching caps accepted contributions per round in the single cached signal pass: a group of size m costs m contributions for each admitted recipient, including self, giving potential cost m². Accepted groups consume the budget in deterministic group/recipient order; this can privilege earlier entries. Zero budget means unconstrained. “Population” and “group sizes” record a matching goal; diagnostics show whether actual structural properties match. No strategy automatically equates every invariant.
+
+Manual group changes, toggles and deletion modify actual state. A bounded topology undo/redo stack records topology edits rather than all agent/event/model edits. Save full checkpoints for exact branch points.
+
+## 6. Input data and reproducibility
+
+Inputs are authored settings and synthetic checkpoints. No external voter file, demographic service, empirical network, language model or runtime dataset is required.
+
+Counter draws are keyed by seed, absolute round, agent/group identity, channel and slot. Event identity hashes select event-coverage channels. Removing an unrelated event does not advance a sequential RNG. Different structures can still change opportunities and outcomes. These draws are reproducibility devices, without an independence proof for every possible counter collision.
+
+Version-2 and version-3 settings/checkpoints migrate into V4 with explicit new neutral defaults; resulting continuation uses V4 equations. Migration preserves supported stored state, not old engine semantics or numerical equivalence. Version-1 files remain incompatible.
 
 ## 7. Submodels
 
-### True utility and belief
+### True utility
 
 For agent i and policy k:
 
-`baseUtility = clip(1 − Σ weight[j]×(ideal[j]−policy[k][j])² / (4×Σ weight[j]) + regionBenefit[k])`; then `utility = clip(baseUtility + currentTrueShock[k])`. The two clipping stages matter when a regional benefit already saturates utility.
+`baseᵢ(k) = clip(1 − Σⱼwᵢⱼ(idealᵢⱼ−policyₖⱼ)²/(4Σⱼwᵢⱼ) + regionBenefitᵢ(k))`
 
-This normalized weighted-squared-distance choice is inspired by spatial voting (S1). Ideal positions are invariant except explicit edits. Policy or benefit edits change outcome utility. False information cannot directly change true utility.
+`utilityᵢ(k) = clip(baseᵢ(k) + currentOutcomeShockᵢ(k))`
 
-Within each eligible active hyperedge, compute the mean belief vector, cube its components and normalize across policies. Average signals across an agent's admitted groups. A group is admitted when the absolute difference between its mean and the agent's belief, evaluated on the group's favorite component, is ≤ confidence. Isolated/rejected agents fall back to their own belief vector. That fallback is not normalized and creates a scale difference from group signals; it is an explicit synthetic assumption, not an information-equivalence guarantee. Cubing a mean is a nonlinear whole-group operation, not fixed additive pairwise messages.
+Clip is to [0,1]; clipping occurs before and after shocks. Policy positions, regional benefits and explicit outcome shocks change true utility. False information changes beliefs. S1 is background; this exact form and all parameters are synthetic choices.
 
-For offset diffusion, count distinct members with absolute offset >0.05 per policy. Simple mode gates transmission if any member meets that criterion; threshold mode gates if their fraction ≥ threshold; off mode gives zero. The transmitted value is the full group's mean offset. Self-membership is included. Confidence gates the group contribution to both social signals and distortion transmission. Contributions are averaged over admitted groups. These are higher-order group mechanisms, not the exact Centola–Macy or Hegselmann–Krause algorithms.
+### Social aggregation and confidence
 
-`offsetNext = clip((offset×(1−decay) + spread×groupOffset×susceptibility×(1−resistance) + newDose) × (1−correction), −1,1)`.
+Let μ(k) be the mean belief for policy k within a group, including the receiving agent. Normalize a nonnegative vector by its sum; all-zero vectors become [1/3,1/3,1/3].
 
-`newDose = intensity×trust×susceptibility×media×(1−resistance)` for the selected policy. A false signal can be positive or negative. Repeated signals accumulate and clip. Prebunk events add abs(intensity)×trust to resistance, capped at 1; resistance decays by `1−decay/4` each round. Event list order matters when same-round resistance and false injection coincide; schedule them separately for an unambiguous contrast. Correction fractions aggregate and cap at 1. Correction acts on offsets; belief memory can preserve prior impressions. This is not a cognitive model fitted to S5.
+- Linear: normalize μ.
+- Nonlinear: normalize μ to the chosen positive amplification exponent, componentwise.
+- Plurality: members split tied favorite votes equally; the group signal is equal mass over the maximal vote-count policies.
+- Threshold: equal mass over policies whose fractional favorite support reaches the consensus threshold. If none qualify, the group provides no signal.
+- None: no group contribution or group-based offset diffusion.
 
-Evidence is clipped trueUtility + offset + uniform noise in [−noise/2,noise/2]. Belief is `memory×oldBelief + (1−memory)×((1−influence×(1−blackout))×evidence + influence×(1−blackout)×priorGroupSignal)`, clipped to [0,1]. Blackout reduces group influence, not independent observation or false injection.
+A recipient admits a group's signal if the absolute difference between its belief and the group mean on the group's favorite component is at most confidence. Admitted normalized signals are averaged and normalized again. If no signal is admitted, normalized own belief is the fallback. This fixes the V2 raw-fallback mismatch but still mixes normalized social vectors with raw utility-scale private evidence.
 
-### Events and targeting
+Confidence and both threshold controls are distinct: consensus threshold determines group policy signal; diffusion threshold determines outside-source distortion transmission. Topology none or aggregation none disables both group signals and group offset diffusion. Setting social influence to zero disables social belief mixing but does not separately disable offset diffusion.
 
-Active window: `start ≤ round < start+duration`; exposure attempts occur when `(round−start) mod period = 0`. Each eligible agent gets an independent keyed coverage draw. Community, geography, metadata equality, resource interval and optional identity set are intersected with AND. Metadata and resource do not otherwise influence preferences or susceptibility automatically. Coverage is a probability per opportunity, not a guaranteed fraction. Event ID determines its random channel, so removing unrelated events does not shift coverage draws.
+### Signed offsets, evidence and belief
 
-Access shocks add signed intensity to regional ballot access, then clip. Participation opportunity is `clip(turnout×agentParticipation×effectiveAccess)`. If abstention is disabled, access failures are intentionally disabled too. Utility shocks add signed policy utility during their active exposure rounds; regional benefits persist. When events stop, new effects stop, but policies and residual beliefs need not return to baseline.
+For each admitted recipient/group/policy, exclude the recipient from transmission sources. A source is active if its absolute offset exceeds 0.05. Simple mode gates if at least one outside source is active; threshold mode gates if the active fraction among outside members reaches the diffusion threshold; off mode gives zero. The transmitted value is the outside members' mean signed offset. Average over admitted groups. Opposite signs can cancel. The fractional threshold can be met by one outside source in small groups, so this need not implement multiple-source complex contagion.
 
-### Voting and learning
+`offsetNext = clip((oldOffset×(1−decay) + spread×groupOffset×susceptibility×(1−resistance) + directDose) × (1−correction), −1,1)`
 
-Plurality: 3 candidate actions. Approval: 7 nonempty masks (a+1). Borda: all 6 rankings, scored 2/1/0. Optional abstention adds one action. Invalid ballots are rejected. If everyone abstains, winner is null. Ties use lowest index or a seeded lottery among tied candidates. Shares normalize total counted scores, not electorate size.
+A direct dose is signed intensity×trust×susceptibility×media×(1−resistance). Resistance decays by 1−decay/4; resistance events add abs(intensity)×trust and cap at 1. Correction amounts add abs(intensity)×trust and cap at 1. Event order matters when resistance and injection coincide.
 
-Observation = `6×perceivedFavorite + 2×groupFavorite + gapBin`, where gapBin=1 when max(belief)−min(belief)>0.15. This gives 18 states. Each agent learns independently using epsilon-greedy Q-learning (S2). Epsilon is max(floor,initial×decay^completedRounds). Nonterminal transitions are delayed until the next actual observation, so the latest reward can have a pending update visible in the inspector. Terminal transitions (round multiple of episodeLength) update immediately without bootstrap. Rule/abstention changes clear Q and pending transitions. Disabling learning clears pending transitions and prevents updates.
+`evidence = clip(utility + offsetNext + uniformNoise)`, where uniformNoise is in [-noise/2,noise/2].
 
-`reward = utilityReward×utility(winner) + ballotReward×max utility among ballot candidates + conformityReward×mean group signal over ballot candidates − votingCost×participated`.
+`weight = influence×(1−blackout)`
 
-No winner gives outcome utility 0. Empty ballots give no ballot or conformity reward and no voting cost. Under Borda the ballot contains all candidates, so those two reward components do not distinguish ranking actions; only collective outcome utility can do so. Approval's max term does not order approvals. Ballot-access failure assigns the resulting abstention reward to the chosen action. Fixed voters abstain voluntarily only if perceived best utility is below votingCost; otherwise they choose perceived favorite/top-only approval/full sincere ranking, then face the same structural access test.
+`beliefNext = clip(memory×oldBelief + (1−memory)×((1−weight)×evidence + weight×oldGroupSignal))`
 
-### Metrics and bounds
+Blackout reduces social belief influence, not private evidence or independently defined offset diffusion. These are chosen numerical mechanisms inspired by S3–S5, not calibrated cognitive processes.
 
-Welfare = mean true utility for elected policy, zero for no winner. Regret = max candidate mean utility − realized welfare, not optimal joint policy regret. Mean reward is separate. Episode return sums mean rewards across its block. Turnout = nonempty ballots / population. Belief error = mean over agents and policies of absolute belief−trueUtility. Distorted = any absolute offset >0.05. Direct reach = ever directly injected, excluding indirect transmission. Disagreement = fraction whose true favorite differs from winner (1 when no winner). Entropy = Shannon entropy over first ballot candidate and abstention; first approval index is a bookkeeping convention. Action changes count actions, not full policy changes. Cohort means and support counts are descriptive; overlapping community totals can double-count people. No recovery-time metric, significance test or empirical forecast is computed.
+### Event semantics
+
+Active window: start ≤ round < start+duration. Coverage attempts occur when (round−start) mod period = 0. Community, region, metadata equality, resource interval and optional ID set intersect with AND. Each eligible agent receives a keyed probability-of-coverage draw. Coverage is not an exact fraction.
+
+Access shocks add signed intensity to regional access and clip. Utility shocks affect the selected policy on their actual exposure rounds; they are not permanent preference changes. Blackout is nonnegative and capped. Disabling an event stops new exposures; learned values, old distortion and memory can persist. The trace records coverage, applied dose, correction, resistance, shock, access, group input and resulting belief.
+
+### Voting, observations and actions
+
+Plurality has three candidate actions. Approval has seven nonempty masks. Borda has all six rankings scored 2/1/0. Optional abstention adds an eighth action at most. Invalid ballots are rejected. If all abstain, winner is null. Ties use smallest policy index or a seeded draw among tied policies. Score shares normalize counted scores, not electorate size.
+
+Observation = 6×perceived favorite + 2×group favorite + gap bin, where gap bin is one when max(belief)−min(belief)>0.15. This gives 18 observations. They do not include every state variable or finite-horizon time-to-go.
+
+Q policy uses epsilon-greedy choice with seeded tie draws and epsilon=max(floor, initial×decay^completedRounds). Sincere policy chooses perceived favorite, top-only approval or sincere complete ranking; it voluntarily abstains if its best belief is below voting cost. Random policy samples legal actions uniformly. All policies face the same information and structural access mechanisms.
+
+A nonempty chosen ballot can be forced empty if a draw exceeds clip(turnout×participation×effectiveAccess). This structural access mechanism is active only when abstention is allowed. Its resulting reward is attributed to the chosen action.
+
+### Reward and learning
+
+Define ballotObjective(values, ballot) as zero for empty ballot; selected value for plurality; mean selected values for approval; and (2×first value + second value)/3 for Borda.
+
+`reward = utilityReward×utility(winner) + ballotReward×ballotObjective(trueUtility) + conformityReward×ballotObjective(groupSignal) − votingCost×participated`
+
+No winner gives outcome utility zero. Decomposition exposes weighted outcome, alignment, conformity and signed cost plus raw terms. The invariant inspector evaluates all legal ballots holding the realized winner fixed; outcome invariance there does not prove a ballot cannot change the winner. Approval mean alignment and Borda rank weights intentionally replace V2 max-over-ballot assumptions.
+
+`Q(s,a) ← Q(s,a) + α[reward + γmaxQ(s′,legal a′) − Q(s,a)]`
+
+Each Q agent has its own table with no parameter sharing. Nonterminal reward waits until the next actual observation; a trace records original action round, observation, reward, target, old/new Q, TD error and terminal flag.
+
+Continuing mode never creates terminal transitions at reporting boundaries. Finite-horizon mode ends at absolute round multiples of episodeLength with zero bootstrap. Before the following step, utility is recomputed and beliefs reset to utility, distortion/resistance/direct-exposure state cleared, and ballots/actions/pending transitions cleared. Demographics, traits, topology, learned Q, lifetime return, reward history, absolute event calendar and global round persist. This is a defined partial environmental reset, not independent regenerated episodes. Changing rule/abstention clears incompatible Q values; learner/task/horizon edits clear pending transitions.
+
+### Metrics, histories and inspection
+
+Welfare is mean true utility of winner, zero with no winner. Best welfare is maximum mean utility among the three policies. Regret is their difference. Mean reward is separate. Reporting-block return sums mean rewards. Turnout is nonempty ballots/population. Error is mean absolute belief−utility over agents/policies. Distorted means any absolute offset >0.05. Direct reach means ever receiving a nonzero direct dose within the current information episode; zero-dose attempts are logged without increasing exposure counters; secondary diffusion is excluded. Dose is actual applied absolute injection dose. Disagreement counts agents whose true favorite differs from winner, or one for no winner. Entropy uses first ballot candidate plus abstention; approval's first entry is bookkeeping. Action changes count changed action IDs.
+
+Metrics retain 3,000 rounds; event and change ledgers retain 500 entries; each agent keeps 80 updates/rewards. Live frames are bounded by min(frameLimit, floor(6000/population)), with frameLimit at most 120, plus a 12×1024²-character serialized-JSON retention budget keeping at least the current frame (string length, not a measured heap-memory limit). Frames retain actual full Q tables and latest trace but omit older agent update/reward histories and truncate metric/ledger tails. A same-round edit replaces that round's previous frame. Frames are inspection artifacts and cannot be restored as full checkpoints.
+
+A full checkpoint includes realized people, Q tables, pending transitions, topology, schedules, round, histories and state. Independent clones branch without shared mutable objects. Experiment recording has a separate bounded frame budget and retains full round metrics; see [experiments.md](experiments.md). Traces reveal modeled transitions rather than identifying real-world causal mediation.
+
+
+
+## Control-to-mechanism map
+
+| Control family | Actual implementation and effect | Timing |
+| --- | --- | --- |
+| Population, seed, saved generators | create/validate sample a fresh realized society | Rebuild clears trained/history state. |
+| Policy positions, region benefits | utilities computes true spatial outcome utility | Next transition, or immediate explicit agent edit. |
+| Topology, grouping, size, overlap, affinity | buildTopology/generateGroups determine actual memberships | Applying parameters rebuilds groups while retaining agents/Q. |
+| Selected group members/active/delete | editGroup/removeGroup/addGroup alter actual structure | Next transition; topology undo/redo is separate. |
+| Aggregation/exponent/consensus threshold | aggregate determines normalized policy signal | Next cached communication pass. |
+| Confidence and communication cap | groupSignals admits or skips recipient/group signals | Next round; fixed processing order matters. |
+| Diffusion/spread/threshold/decay | groupSignals and step update signed offsets | Next round, separate from social belief influence. |
+| Memory/noise/influence/blackout | step mixes private evidence and received social signal | Next information update. |
+| Event window/period/filter/coverage | active/matches and keyed event draws determine actual exposure | Absolute scheduled rounds; disabling stops future effects. |
+| Learner/exploration | choose selects sincere, random or epsilon-greedy action | Next ballot; learner edits clear pending transitions. |
+| Alpha/gamma | applyLearning/qUpdate change actual tabular target/update | Next actual update. |
+| Task mode/horizon | step/resetEpisode determine terminal target and reset | At absolute boundary; mode edits clear pending transition. |
+| Rule/tie/abstention/cost/access | ballot/election/step define legal action, tally and participation | Next ballot; rule/abstention changes clear incompatible Q. |
+| Reward weights | rewardComponents changes outcome/alignment/conformity terms | Next reward; does not directly alter utility. |
+| Matching/seed/grid/endpoints | comparisonContract/runPair/planSweep define actual research job | When a new comparison starts. |
+| Historical round/replay | frameAt and retained pairedFrames select recorded copies | Inspection only; does not step or mutate live agents. |
+

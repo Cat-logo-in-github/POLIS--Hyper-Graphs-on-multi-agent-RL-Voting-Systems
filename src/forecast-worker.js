@@ -1,0 +1,3 @@
+import {runForecastAsync,calibrateForecastAsync} from './forecast.js';
+let busy=false,cancelled=false;
+self.onmessage=async e=>{if(e.data.cancel){cancelled=true;return;}if(busy){self.postMessage({error:'A forecasting study is already running'});return;}busy=true;cancelled=false;try{const calibration=e.data.type==='calibrate',fn=calibration?calibrateForecastAsync:runForecastAsync,result=await fn(e.data.options,{shouldCancel:()=>cancelled,onProgress:progress=>self.postMessage({progress})});self.postMessage({done:true,type:calibration?'calibrate':'forecast',result});}catch(error){self.postMessage({error:error.message});}finally{busy=false;}};

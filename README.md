@@ -1,68 +1,89 @@
-# POLIS 2.0
+# POLIS 4.0 — Society, forecasting and social choice
 
-**A browser-native political behavior research playground.** Build synthetic societies, edit policy packages, schedule information disruptions and corrections, inspect independent learners, and compare reproducible experiments.
+**Configure a miniature society, compare institutions, and inspect conditional forecasts with their evidence and limits.**
 
-This is a theory-exploration model, not a real-election forecasting system or an empirically calibrated model of human cognition. All people, communities and geographies are synthetic. It does not ingest voter files, generate political messages, or optimize real campaigns.
+POLIS is a local browser research environment. V4 adds independent neural Q-learning, behavioral assumptions, ensemble forecasting, aggregate-data fitting with chronological validation, and a computational-social-choice laboratory. It preserves the topology studio, communities/geographies/metadata, scheduled interventions, exact checkpoints, recorded counterfactual replay and prior rule comparisons.
 
-[Verified browser preview](docs/preview.jpg)
+## Launch
 
-## Start exploring
+Extract **POLIS-v4.0.zip**. The **POLIS-4.0** folder contains `index.html` at its root. Serve that folder using static hosting or a local HTTP server, then open its address. The app needs no account, API key, backend or remote runtime library. Browser ES modules/workers require HTTP; double-clicking `index.html` through `file://` may fail.
 
-The default lab starts immediately on an HTTP-served page. Pause or step one/ten rounds. Six persistent destinations preserve live state:
+With Python installed, one local option is:
 
-| Destination | What it does |
+```
+python -m http.server 8000
+```
+
+Then open `http://localhost:8000`. Node is needed only for optional development tests/batch research, not for the hosted app. The source includes a GitHub Pages workflow below.
+
+## Start without specialist knowledge
+
+The five main destinations are **Society model, Live lab, Forecast, Choice lab, Research**. Society workspaces reveal policy/behavior, interventions and comparison tools when relevant. Study files sit in one disclosure. The **Guided/Researcher** selector controls technical disclosures, and **?** opens contextual explanations with optional research detail.
+
+1. Use **Run guided experiment** in Live lab. It pauses a real baseline at round 20. Select a group square and branch it; compare recorded futures after its removal.
+2. In **Society model**, set communities, places, traits and policy alternatives. Generator changes rebuild agents; realized agent/group edits apply to the live society. The studio supports selected voter IDs, shift/box selection, membership edits, activation, deletion, randomization and undo/redo.
+3. In **Policies & behavior**, choose sincere, random, stochastic logit, tabular Q or neural Q decisions. Expand technical parameters only when needed. Inspect actual action values, TD updates, replay/target statistics and neural loss in Live lab.
+4. In **Forecast**, run an ensemble from fresh generators or an exact learned checkpoint. Vary explicit assumptions; inspect final-round winner frequencies and final-window outcome distributions. Simulation rounds have no built-in calendar interpretation.
+5. Load the clearly labeled **synthetic demonstration** to learn fitting and validation, or import local aggregate observations. Training selects parameters; later observations and disjoint simulation seeds evaluate them beside a simple baseline. A fitted model can perform worse, and the UI reports that.
+6. In **Compare voting rules**, set an objective before running. Compare three rules across any of five decision policies. Custom weights and a descriptive Pareto set expose tradeoffs. A tested candidate can be reproduced to its trained first-seed state in Live lab, inspected and checkpointed.
+7. In **Choice lab**, choose a handbook chapter, edit its profile/matrix/claims and run. Each result links its question, precise method, limits and source. Export exact inputs and computed results.
+
+A policy package is an alternative to elect; a voting rule aggregates ballots; an agent decision policy chooses a ballot. They are different research objects.
+
+## What V4 implements
+
+| Area | Executable capability |
 | --- | --- |
-| Lab | Geographic/community layouts; voter and group inspection; election totals; learning, welfare, turnout and belief trajectories; event ledger; community, region, metadata and resource-band cohorts; CSV exports. |
-| Society | Create/edit/delete community and geography generators; define categorical metadata; edit realized agents and overlapping memberships; create live manual hyperedges; regenerate communication structures. |
-| Policies | Edit three policy packages over three issue axes; plurality, approval and full-ranking Borda; ties, abstention, ballot access, voting costs, reward components and Q-learning settings. |
-| Interventions | Schedule false utility signals, correction, synthetic resistance, group-information blackout, ballot-access shocks and true outcome shocks. Set start, duration, repetition, signed intensity, coverage and intersecting filters. |
-| Experiments | Six paired templates, custom one-parameter sweeps, 1–12 seeds, 10–500 rounds, fresh societies or conditional checkpoint forks, worker progress/cancellation, protocol and result exports. |
-| Research | Equations, source-to-mechanism mapping, access notes, definitions and limitations. |
+| Society and studio | 12–600 actual agents, overlapping communities, abstract geography, metadata, individual traits/ideals, manual/dynamic groups, selection/editing/undo and preserved learned state. |
+| Communication | Six topology modes: hypergraph, generated pairs, exact clique projection, degree-preserving randomized null, no-group ablation, dynamic groups. Five aggregators: linear, nonlinear, plurality, threshold consensus, no influence. Explicit incidence/communication constraints and mismatch diagnostics. |
+| Behavioral models | Sincere, random and logit actions; editable temperature, private-information anchoring and confirmation gate; trust/confidence/noise/memory/diffusion assumptions. Neutral new controls preserve supported V3 transitions. |
+| Learning | Independent tabular Q and independent small DQN agents; actual one-hot MLP gradients, Huber loss, recent replay, target copies and bounded traces. Continuing versus finite-horizon semantics remain explicit. |
+| Forecasting | Up to 128 seeded runs, 500 future rounds, fixed/uniform/weighted-discrete assumptions, winner frequencies/MC errors, trajectory and endpoint quantiles, conditional checkpoint futures and exact protocol/CSV exports. |
+| Calibration | Local aggregate CSV/JSON, explicit score-share semantics/provenance, up to two fit axes/25 candidates, chronological split, separate validation seeds, held-out numeric/probabilistic scores, persistence/frequency baseline and observed-versus-simulated plots. |
+| Institutional studies | Three core rules × five decision policies; stated evaluation window, paired seed differences, competing metrics, user-weighted objective, descriptive nondominated set, exact first-seed trained inspection. |
+| Theory laboratory | 19 editable representative handbook experiments, with bounded workers, exact/bounded status, visuals, small-input exhaustive algorithms and exports. |
+| Reproducibility | Full learned checkpoints, independent A/B branches, actual retained historical states, divergence highlights, bounded sensitivity grids, reports, measured examples, tests and research-to-function mappings. |
 
-Use **Apply parameters** to commit numeric settings. Population/seed changes regenerate the society. Changing a voting rule or availability of abstention clears incompatible Q tables. Other live settings preserve agents and policies. Society-generator edits are drafts: save each edited generator, then **Apply generators & rebuild**. Agent edits and manual hyperedges apply immediately. Their exact realized state is preserved in checkpoints, not generator-only configuration exports.
+The forecast work limit is 30,000 simulated rounds and six million agent updates per job. Detailed neural replay has a separate memory cap; very large networks/populations must reduce replay detail or use ensembles without retained frames. Representative population scaling changes illustrative counts only, never simulated sample size or precision. See the exact module limits before launching a study.
 
-### A useful first experiment
+## What “forecast” and “optimal” mean
 
-1. Choose **Rumor & delayed correction**. Pause and single-step to inspect offsets, beliefs and Q-values.
-2. In Society, add a community, set its relative weight, issue ideals and traits, save it and rebuild. Add an abstract geography or metadata factor if useful.
-3. In Interventions, combine community, geography, metadata, resource and optional agent-ID filters. The preview counts matching agents. Set the first round in the future, then schedule the event. Effects begin before that round's ballot.
-4. Observe direct reach separately from secondary distortion prevalence. Disable future injections; existing offsets, beliefs and policies can persist.
-5. In Experiments, compare no injection with a false signal, or compare false signal with delayed correction. State the question and inspect paired variability. A positive welfare difference is not guaranteed.
+Without observation-based evaluation, the output is a **conditional scenario distribution**. Aggregate calibration is implemented, but no bundled empirical voter dataset, census model or live polling feed establishes its accuracy. Imported provenance is unverified. Serially dependent held-out rounds are weaker evidence than new independent elections. Simulation quantiles and Monte Carlo errors are not automatically calibrated real-world prediction intervals.
 
-## Reproducibility and export
+Neural agents learn from the numerical reward inside your model. They are not pretrained human voters. The best observed rule depends on the chosen objective, action/observation model, population, rewards, seeds, training horizon and evaluation window. A Pareto set of sample means does not establish an optimum under uncertainty. No perfect society simulation, universal optimum, MARL convergence, equilibrium or real-electorate forecast accuracy is claimed.
 
-- **Export study**: generators, policy positions, model parameters and event schedule. Import restarts fresh.
-- **Share settings**: URL for settings up to 12,000 URL characters; larger studies download as JSON. Never claims to share training history.
-- **Checkpoint**: exact realized agents, metadata, custom memberships/groups, pending Q transitions, learned policies, history and current round. Saved in memory, optionally local storage, and downloaded. **Import** accepts the checkpoint file as well as study JSON.
-- **Round metrics / agents CSV**: actual engine measurements and synthetic-agent state. No private or empirical voter data is included.
-- **Experiment export**: question, full configuration, explicit baseline/treatment changes, seeds, endpoints, per-pair means and differences, first pair trajectories, and current snapshot for conditional studies. A cancelled study is marked incomplete.
+There is **one representative editable reconstruction per handbook chapter**, not every example, proof, algorithm or experiment in the 554-page book. Read the complete [coverage table](docs/handbook-coverage.md). Some algorithms are exact only within small caps; larger searches are bounded or rejected explicitly. The handbook PDF is linked, not redistributed.
 
-Matching uses counter-based random draws keyed by seed, round, agent, channel and event identity. Fresh pairs share initial agents. Changing network structure deliberately changes opportunities. Snapshot-mode seeds vary conditional futures of the same population, not independent population samples. Manual groups and agent edits are absent from fresh generator studies; use snapshot mode to retain them.
+## Research and methods
+
+The Research notebook has source mappings with actual access notes and explicit non-reproduction boundaries. Selected primary readings include the [Handbook](https://procaccia.info/wp-content/uploads/2020/03/comsoc.pdf), [DQN](https://arxiv.org/abs/1312.5602), [MARL replay/nonstationarity](https://proceedings.mlr.press/v70/foerster17b.html), [election ABM forecasting](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0270194), [ABM calibration](https://arxiv.org/abs/1703.10639), [proper scoring](https://sites.stat.washington.edu/raftery/Research/PDF/Gneiting2007jasa.pdf), behavioral/opinion-dynamics studies and research on synthetic human samples. Mathematical models and published success elsewhere do not transfer predictive validity to POLIS.
+
+Read [model.md](docs/model.md), [neural-notes.md](docs/neural-notes.md), [forecast-methods.md](docs/forecast-methods.md), [experiments.md](docs/experiments.md), [scenarios.md](docs/scenarios.md), [limitations.md](docs/limitations.md), [audit.md](docs/audit.md) and [verification.md](docs/verification.md). Actual example results and a printable HTML report are included. The saved synthetic calibration example deliberately includes a case where a simple baseline beats the fitted model.
+
+## Files and compatibility
+
+Settings JSON stores generators/parameters; importing creates fresh agents. Checkpoint JSON preserves realized traits, groups, pending transitions, online/target neural weights, replay, Q tables and retained histories. A recorded replay frame is inspection data, not a replacement full checkpoint. Save a full checkpoint before rebuilding. V2/V3 configurations/checkpoints migrate to V4; older semantics or new nonneutral controls can change continuation. V1 is not supported.
+
+Forecast JSON stores complete assumptions, seeds, actual per-run outcomes and trajectories; fitted studies additionally store training/holdout data, candidates and scores. Handbook exports store exact inputs, method, limits and output. Files remain local unless you explicitly share them. No repository was changed or deployed for this delivery.
 
 ## Deploy to GitHub Pages
 
-1. Extract the ZIP. The `POLIS` directory contains the root `index.html`.
-2. Copy **the contents of POLIS**, including `.github`, into your `Hyper-Graphs-on-multi-agent-RL-Voting-Systems` repository. Preserve existing research and review filename collisions before replacing anything.
-3. Commit and push to `main`. Edit the workflow branch if yours differs.
-4. In repository **Settings → Pages**, select **GitHub Actions**. The included workflow runs the engine tests and publishes static files without a website build step.
-5. Open https://cat-logo-in-github.github.io/Hyper-Graphs-on-multi-agent-RL-Voting-Systems/ .
+1. Extract the ZIP and back up your publishing repository.
+2. Copy the **contents** of POLIS-4.0, including `.github`, into the static publishing repository. Preserve unrelated Python research code in the separate reference repository.
+3. Commit/push to `main` (or update the workflow branch to your publishing branch).
+4. In repository **Settings → Pages**, select **GitHub Actions**. The workflow runs tests/path checks, stages local assets and deploys without a website build.
+5. Open your repository's Pages URL. Relative imports and all three worker URLs support repository subpaths.
 
-Relative URLs support the repository subpath. Nothing has been committed, pushed or publicly deployed on your behalf. The original repository was not available locally and was not visited or merged. This extends the standalone V1 implementation.
+The existing publishing address is [the POLIS Pages site](https://cat-logo-in-github.github.io/POLIS--Hyper-Graphs-on-multi-agent-RL-Voting-Systems/); it remains unchanged until you deploy. The separate Python [reference repository](https://github.com/Cat-logo-in-github/Hyper-Graphs-on-multi-agent-RL-Voting-Systems) has a different repository name/subpath.
 
-## Optional local testing
+## Optional researcher/developer checks
 
-Serve this directory with any static server, for example `python -m http.server 8000`, and open http://localhost:8000 . ES modules and workers may fail under `file://`; use HTTP. Python is only an optional local testing tool. The deployed site needs no Node, npm, Python, account, server, API key, installation, compilation or remote runtime.
-
-With Node 22+ installed for development only:
+With Node 22+, no dependencies need installation:
 
 ```
-node --test tests/engine.test.js
-node tests/repeated-study.js
+node --test tests/*.test.js
 node tests/check-package.js
+node tests/repeated-study.js
 ```
 
-No dependency installation is required. All runtime code is original local JavaScript; MIT license included. Full model, study protocol, bibliography, V2 changes and verification are in `docs/`. Examples are in `examples/` and can be imported through the UI.
-
-## Scope
-
-12–600 agents, 3 policies, 3 fixed issue axes, 16 community generators, 12 abstract regions, 8 categorical metadata factors, 40 events, 3,000 retained rounds. No guarantee of learning convergence, real-world causal identification or universally optimal institutions. See `docs/limitations.md` for the model's strongest assumptions and omissions.
+The forecast-methods document includes a complete batch-study example. Versioned source, exact seed lists and exported protocols are needed for reproducibility. The MIT license covers this implementation; external publications retain their own rights.
